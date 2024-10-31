@@ -3,7 +3,9 @@
 @tailwind utilities;
 
 @layer components {
-    html {
-        @apply bg-slate-600
+    body {
+        @apply bg-slate-600 box-border
+    
     }
+    
 }

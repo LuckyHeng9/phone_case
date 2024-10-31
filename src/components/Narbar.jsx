@@ -1,32 +1,55 @@
-import React from 'react'
+import React, { useState } from 'react';
+import { CiSearch } from "react-icons/ci";
+import { AiOutlineMenu } from "react-icons/ai";
+import { MdOutlineClose } from "react-icons/md";
+import { IoCartOutline } from "react-icons/io5";
 
-function Narbar() {
-  return (
-    <header className="w-full p-4 z-10 bg-[#2F3448] h-16 flex items-center shadow-md">
-    <nav className="flex items-center justify-between w-full">
-        <a href="#" className="p-12">
-            <img
-                src="https://s3-alpha-sig.figma.com/img/cca1/7e31/2bee18e5d653e385bd9677296c1f041d?Expires=1730678400&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=jzPdKcdGJj2i0SCCm2RACuV7-VbpjHok0qgqf0VjI21BZQqqx7uE2WZZ1THLjMxnAmGgDBTfhoyTCRJSuzyarS0zXIMMiCEbfsy3gvHZtcraS9-54GUYfttFpe9sHZh-aiuvAKQI7Sf3HzOP7bLXWXJP5VQxWE5n-H~vaRJQwJEds4NhlkRTX17OBX07Lui2P9C7nF5yLfXXOJ39kozHH-HKEqg1N-~IudCJv2N9rQqJjnZVVzVap0DhyFGklQnjkboSry9PSDpWeSTAzHFqXqIKmclOJsTktm9I7Ry9iGR-nEeeYSOr7C12-CIzKgRvLm0cv71x-SjTWNrlB~Zhlg__"
-                alt="logo"
-                className="w-16"
-                style={{ transform: 'rotate(30deg)' }}
-            />
-        </a>
-        <ul className="flex items-center p-14 m-4 space-x-8 text-white">
-            <input
-                type='text'
-                placeholder="Search categories"
-                className="p-2 rounded-md w-40 text-black"
-            />
-            <a href="#">Our Products</a>
-            <div className="flex space-x-4">
-                <button className="p-2 rounded-md w-24 border-2 border-solid border-white text-white">Log in</button>
-                <button className="p-2 rounded-md bg-[#6ABDDB] text-[#2F3448] w-24 border-2 border-solid border-[#6ABDDB]">Sign up</button>
+const Navbar = () => {
+    const [isOpen, setIsOpen] = useState(false);
+
+    const toggleMenu = () => {
+        setIsOpen(!isOpen);
+    };
+
+    return (
+        <header className="fixed w-full p-4 z-10 bg-[#2F3448] h-16 flex items-center shadow-md">
+            <nav className="flex items-center justify-between w-full max-w-screen-xl mx-auto">
+                <a href="#" className="p-4">
+                    <h1 className="text-white text-2xl shadow-md hover:text-white/45">Case</h1>
+                </a>
+                <button onClick={toggleMenu} className="md:hidden text-white absolute right-4 text-2xl z-20">
+                    {isOpen ? <MdOutlineClose /> : <AiOutlineMenu />}
+                </button>
+                <ul className="flex items-center space-x-4">
+                    <li className="flex items-center hiden max-lg:hidden ">
+                        <div className="flex items-center">
+                            <input
+                                type="text"
+                                className="bg-gray-100 text-black rounded p-1 outline-none"
+                                placeholder="Search..."
+                            />
+                            <CiSearch className=" mr-5 md:-ml-7  text-black text-xl  " />
+                        </div>
+                        <button className="text-white text-2xl  hover:text-white/45">
+                            <IoCartOutline />
+                        </button>
+                    </li>
+
+                </ul>
+                <button className=" mr-7 text-white text-2xl v hover:text-white/45 "><CiSearch /></button>
+
+            </nav>
+            <div className={`absolute top-0 right-0 w-2/3 h-screen bg-[#3e3e55] transform ${isOpen ? 'translate-x-0' : 'translate-x-full'} transition-transform duration-300 ease-in-out md:hidden`}>
+                <ul className="flex flex-col items-center py-16 px-3 relative top-6 text-white gap-4">
+                    <button className="text-white text-2xl hover:text-white/45">
+                        <IoCartOutline />
+                    </button>
+                    <button className="w-full h-12 rounded-md bg-slate-800 text-lg hover:bg-slate-400">Register</button>
+                    <button className="w-full h-12 rounded-md bg-slate-800 text-lg hover:bg-slate-400">Login</button>
+                </ul>
             </div>
-        </ul>
-    </nav>
-</header>
-  )
-}
+        </header>
+    );
+};
 
-export default Narbar
+export default Navbar;
