@@ -12,7 +12,7 @@ const Navbar = () => {
     };
 
     return (
-        <header className="fixed w-full p-4 z-10 bg-[#2F3448] h-16 flex items-center shadow-md">
+        <header className="w-full p-4 z-10 bg-[#2F3448] h-16 flex items-center shadow-md">
             <nav className="flex items-center justify-between w-full max-w-screen-xl mx-auto">
                 <a href="#" className="p-4">
                     <h1 className="text-white text-2xl shadow-md hover:text-white/45">Case</h1>
@@ -36,7 +36,7 @@ const Navbar = () => {
                     </li>
 
                 </ul>
-                <button className=" mr-7 text-white text-2xl v hover:text-white/45 "><CiSearch /></button>
+                <button className=" mr-7 lg:hidden text-white text-2xl hover:text-white/45 "><CiSearch /></button>
 
             </nav>
             <div className={`absolute top-0 right-0 w-2/3 h-screen bg-[#3e3e55] transform ${isOpen ? 'translate-x-0' : 'translate-x-full'} transition-transform duration-300 ease-in-out md:hidden`}>
@@ -52,4 +52,4 @@ const Navbar = () => {
     );
 };
 
-export default Navbar;
+export default Navbar
