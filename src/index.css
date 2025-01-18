@@ -7,5 +7,11 @@
         @apply bg-slate-600 box-border
     
     }
-    
+    h1 {
+        @apply text-lg
+    }
+    .btn{
+        @apply flex items-center justify-center w-72 text-center text-white py-2 rounded-lg border-2 hover:bg-[#2F3448] transition
+    }
+
 }

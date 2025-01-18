@@ -1,24 +1,31 @@
-// src/components/ProductCard.js
-import React from 'react';
+import React from "react";
+import { FaRegBookmark } from "react-icons/fa";
 
 const ProductCard = ({ product }) => {
   return (
-    <div className="bg-white shadow-md rounded-lg p-4 w-64 ">
-      <img 
-        src={product.img} 
-        alt={product.title} 
-        className=" w-full object-cover rounded-md mb-4"
+    <div className="bg-[#272B3B] shadow-md rounded-lg w-56 h-[350px] ">
+      {/* Product Image */}
+      <img
+        src={product.img}
+        alt={product.title}
+        className="w-full  mb-4"
       />
-      <h2 className="text-lg font-bold mb-1">{product.title}</h2>
-      <p className="text-sm text-gray-500 mb-2">{product.model}</p>
-      <p className="text-sm text-gray-500 mb-4">{product.type}</p>
-      <p className="text-lg font-semibold text-blue-500">{product.price}</p>
-      <button className="bg-blue-500 text-white rounded-lg mt-4 py-2 px-4 w-full hover:bg-blue-600">
-        Add to Cart
-      </button>
+      
+      <div className="p-2 ">
+        {/* Product Details */}
+      <div className="flex flex-col gap-1">
+        <h2 className="text-white text-lg font-bold mb-1">{product.title}</h2>
+        <p className="text-sm text-gray-500 mb-1">{product.model}</p>
+        <p className="text-lg font-semibold text-white">{product.price}</p>
+      </div>
+
+      {/* Bookmark Icon */}
+      <div className=" text-lg flex justify-end -mt-5 px-2">
+        <FaRegBookmark className="text-white hover:text-blue-500 cursor-pointer" />
+      </div>
+      </div>
     </div>
   );
-  
 };
 
 export default ProductCard;

@@ -12,7 +12,7 @@ const Navbar = () => {
     };
 
     return (
-        <header className="w-full p-4 z-10 bg-[#2F3448] h-16 flex items-center shadow-md">
+        <header className="fixed w-full p-4 z-10 bg-[#2F3448] h-16 flex items-center shadow-md">
             <nav className="flex items-center justify-between w-full max-w-screen-xl mx-auto">
                 <a href="#" className="p-4">
                     <h1 className="text-white text-2xl shadow-md hover:text-white/45">Case</h1>
@@ -21,24 +21,24 @@ const Navbar = () => {
                     {isOpen ? <MdOutlineClose /> : <AiOutlineMenu />}
                 </button>
                 <ul className="flex items-center space-x-4">
-                    <li className="flex items-center hiden max-lg:hidden ">
+                    <li className="hidden lg:flex items-center">
                         <div className="flex items-center">
                             <input
                                 type="text"
                                 className="bg-gray-100 text-black rounded p-1 outline-none"
                                 placeholder="Search..."
                             />
-                            <CiSearch className=" mr-5 md:-ml-7  text-black text-xl  " />
+                            <CiSearch className="mr-5 text-black text-xl" />
                         </div>
-                        <button className="text-white text-2xl  hover:text-white/45">
+                        <button className="text-white text-2xl hover:text-white/45">
                             <IoCartOutline />
                         </button>
                     </li>
-
                 </ul>
-                <button className=" mr-7 lg:hidden text-white text-2xl hover:text-white/45 "><CiSearch /></button>
-
+                <button className="mr-7 lg:hidden text-white text-2xl hover:text-white/45"><CiSearch /></button>
             </nav>
+
+            {/* Side Menu (Mobile) */}
             <div className={`absolute top-0 right-0 w-2/3 h-screen bg-[#3e3e55] transform ${isOpen ? 'translate-x-0' : 'translate-x-full'} transition-transform duration-300 ease-in-out md:hidden`}>
                 <ul className="flex flex-col items-center py-16 px-3 relative top-6 text-white gap-4">
                     <button className="text-white text-2xl hover:text-white/45">
@@ -52,4 +52,4 @@ const Navbar = () => {
     );
 };
 
-export default Navbar
+export default Navbar;
