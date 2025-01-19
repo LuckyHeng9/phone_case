@@ -28,7 +28,7 @@ const Navbar = () => {
                                 className="bg-gray-100 text-black rounded p-1 outline-none"
                                 placeholder="Search..."
                             />
-                            <CiSearch className="mr-5 text-black text-xl" />
+                            <CiSearch className="mr-5 text-white text-xl" />
                         </div>
                         <button className="text-white text-2xl hover:text-white/45">
                             <IoCartOutline />
