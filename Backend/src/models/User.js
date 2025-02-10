@@ -19,7 +19,7 @@ const UserSchema = new mongoose.Schema(
     },
     address: {
       type: String,
-      required: true,
+      default: null,
     },
     profile_picture_path: {
       type: String,

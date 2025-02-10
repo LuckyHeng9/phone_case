@@ -5,20 +5,21 @@ import axios from 'axios';
 import { base_url } from '../base_url';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../redux/slice/authSlice';
+import Signup from './Signup';
 
 const Login = () => {
-
-  const dispatch = useDispatch();
+  const [isLoginForm, setIsLoginForm] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const dispatch = useDispatch();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     const data = { email, password };
-    
+
     try {
-      const response = await axios.post(base_url + '/auth/login', data)
-    
+      const response = await axios.post(base_url + '/auth/login', data);
+
       if (response.status === 200 && response.data.token) {
         dispatch(setUser(response.data.user));
         localStorage.setItem('token', response.data.token);
@@ -33,20 +34,59 @@ const Login = () => {
   };
 
 
+  const toggleForm = () => {
+    setIsLoginForm(!isLoginForm);
+  };
+
   return (
     <div className="flex justify-center items-center min-h-screen bg-[#1a1a2e] text-white">
       <div className="bg-[#4C5566] rounded-lg p-8 w-full max-w-md text-center shadow-lg">
-        <h1 className="text-2xl font-semibold mb-2">Log in with your Case Account</h1>
+        <h1 className="text-2xl font-semibold mb-2">
+          {isLoginForm
+            ? "Log in with your Case Account"
+            : "Create a New Account"}
+        </h1>
         <p className="text-gray-300 text-sm mb-6">
-          or create a <a href="#" className="text-blue-400 underline">new account</a> for free
+          {isLoginForm ? "or create a " : "Already have an account? "}
+          <button onClick={toggleForm} className="text-blue-400 underline">
+            {isLoginForm ? "new account" : "Log in"}
+          </button>
         </p>
 
-        <div className="flex justify-between space-x-4 mb-6">
-          <button className="w-1/2 h-12 text-white font-semibold">Log in</button>
-          <button className="w-1/2 h-12 text-gray-400 bg-[#000000]">Sign up</button>
-        </div>
+        {isLoginForm ? (
+          <form className="space-y-4" onSubmit={handleLogin}>
+            <input
+              type="email"
+              placeholder="Email"
+              className="w-full px-4 py-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              className="w-full px-4 py-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <div className="flex items-center justify-start text-sm text-gray-400">
+              <input type="checkbox" id="rememberMe" className="mr-2" />
+              <label htmlFor="rememberMe">Remember me</label>
+            </div>
+            <button
+              type="submit"
+              className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition font-semibold"
+            >
+              Log In
+            </button>
+          </form>
+        ) : (
+          <Signup/>
+        )}
 
-        <div className="flex flex-col items-center space-y-2 mb-4">
+        <div className="flex flex-col items-center space-y-2 my-4">
           <button className="btn">
             <MdFacebook className="mr-2 text-2xl" /> Continue with Facebook
           </button>
@@ -54,41 +94,6 @@ const Login = () => {
             <FaGoogle className="-ml-3 mr-3 text-xl" /> Continue with Google
           </button>
         </div>
-
-        <p className="text-gray-400 mb-4">OR</p>
-
-        <form onSubmit={handleLogin} className="space-y-4">
-          <input
-            type="text"
-            placeholder="Email"
-            value={email}  // Controlled input
-            onChange={(e) => setEmail(e.target.value)}  // Update email state
-            className="w-full px-4 py-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-            required
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}  // Controlled input
-            onChange={(e) => setPassword(e.target.value)}  // Update password state
-            className="w-full px-4 py-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-            required
-          />
-          <div className="flex items-center justify-start text-sm text-gray-400">
-            <input type="checkbox" id="rememberMe" className="mr-2" />
-            <label htmlFor="rememberMe">Remember me</label>
-          </div>
-          <button
-            type="submit"
-            className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition font-semibold"
-          >
-            Log In
-          </button>
-        </form>
-
-        <p className="text-sm text-gray-400 mt-4">
-          <a href="#" className="text-blue-400 underline">Forgot password?</a>
-        </p>
 
         <footer className="flex justify-between mt-6 text-xs text-gray-400">
           <div>
@@ -102,8 +107,12 @@ const Login = () => {
           <div className="text-right">
             <p>Follow us</p>
             <div className="flex space-x-2 mt-1">
-              <a href="#"><img src="facebook-icon.png" alt="Facebook" className="w-5" /></a>
-              <a href="#"><img src="instagram-icon.png" alt="Instagram" className="w-5" /></a>
+              <a href="#">
+                <img src="facebook-icon.png" alt="Facebook" className="w-5" />
+              </a>
+              <a href="#">
+                <img src="instagram-icon.png" alt="Instagram" className="w-5" />
+              </a>
             </div>
           </div>
         </footer>

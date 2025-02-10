@@ -4,24 +4,23 @@ const User = require("../models/User");
 
 const authController = {
   register: async (req, res) => {
-    const { username, email, password, address, profile_picture_path } =
-      req.body;
-
-    if (!username || !email || !password || !address) {
+    const { username, email, password, address, profile_picture_path } = req.body;
+  
+    if (!username || !email || !password) {
       return res.status(400).json({ error: "All fields are required" });
     }
-
+  
     try {
       // Check if the email already exists in the database
       const existingUser = await User.findOne({ email });
       if (existingUser) {
         return res.status(400).json({ error: "Email is already taken" });
       }
-
+  
       // Hash password
       const salt = await bcrypt.genSalt(10);
       const hashPassword = await bcrypt.hash(password, salt);
-
+  
       // Create a new user
       const newUser = new User({
         username,
@@ -30,11 +29,17 @@ const authController = {
         address,
         profile_picture_path,
       });
-
+  
       // Save the user to the database
       await newUser.save();
+  
+      // Generate a token for the new user
+      const token = getToken(newUser);
+  
+      // Respond with the token and user data
       return res.status(201).json({
         message: "User registered successfully",
+        token, // Include the token in the response
         user: {
           id: newUser._id,
           username: newUser.username,
@@ -51,6 +56,7 @@ const authController = {
       return res.status(500).json({ error: "Server error" });
     }
   },
+  
 
   login: async (req, res) => {
     const { email, password } = req.body;
@@ -89,18 +95,21 @@ const authController = {
       return res.status(500).json({ error: "Server error" });
     }
   },
+
   checkAuth: async (req, res) => {
     try {
       const id = req.user.id;
       const user = await User.findById(id);
       res.status(200).json(user);
     } catch (error) {
-      res.status(401).json({message:"Unauthentication"});
+      res.status(401).json({ message: "Unauthenticated" });
     }
   },
 };
 
 module.exports = authController;
+
+// Helper function to generate JWT token
 function getToken(user) {
   try {
     const token = jwt.sign(
@@ -109,11 +118,10 @@ function getToken(user) {
         username: user.username,
         email: user.email,
       },
-      process.env.JWT_KEY,
+      process.env.JWT_KEY, // Ensure JWT_KEY is set in your environment variables
       { expiresIn: "5h" }
     );
-  //  console.log("Generated Token:", token);  // Log the token
-    return token;
+    return token; // Ensure that the token is returned
   } catch (error) {
     console.error("JWT Error:", error);
     throw new Error("Failed to generate token");

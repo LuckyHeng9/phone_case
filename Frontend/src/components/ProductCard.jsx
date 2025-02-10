@@ -38,7 +38,7 @@ const ProductCard = ({ product }) => {
         <div className="flex flex-col gap-1">
           <h2 className="text-white text-lg font-bold mb-1">{product.title}</h2>
           <p className="text-sm text-gray-500 mb-1">{product.model}</p>
-          <p className="text-lg font-semibold text-white">{product.price}</p>
+          <p className="text-lg font-semibold text-white">${product.price}</p>
         </div>
 
         {/* Bookmark Icon */}

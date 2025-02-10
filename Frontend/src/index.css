@@ -2,6 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+
+@layer base {
+  /* Remove spinners for number inputs (WebKit browsers) */
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Remove spinners for number inputs (Firefox) */
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+}
+
 @layer components {
     body {
         @apply bg-slate-600 box-border

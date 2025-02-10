@@ -7,7 +7,7 @@ import Design from "./Design";
 
 const Hero = () => {
   return (
-    <div className="w-full h-auto overflow-x-hidden">
+    <div className="w-full h-auto overflow-x-hidden ">
       {/* Apply overflow-x-hidden to prevent horizontal scroll */}
       <div className="w-full flex flex-col md:flex-row items-center justify-between px-4 md:px-8 space-y-8 md:space-x-8 text-white md:space-y-0 max-sm:flex-col-reverse">
         <div className="w-72 h-72 lg:w-96 lg:h-96 flex items-center bg-[#2C3041] rounded-full max-sm:hidden">

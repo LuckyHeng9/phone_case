@@ -21,9 +21,9 @@ const WishList = ({ wishListItems, handleRemoveWishList, closeWishList }) => {
                 src={product.img }
                 className="w-[5rem] object-cover rounded"
               />
-              <div className="flex items-center flex-col gap-1">
+              <div className="flex flex-col gap-1">
                 <p className="text-gray-700 text-lg">{product.title}</p>
-                <p className="text-gray-500 text-md">{product.price}</p>
+                <p className="text-gray-500 text-md">${product.price}</p>
               </div>
               <div className="ml-auto">
                 <button
