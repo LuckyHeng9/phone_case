@@ -1,20 +1,19 @@
-const express = require("express");
-const cors = require("cors");
-const dotenv = require("dotenv");
-const path = require("path");
-const fs = require("fs");
-const connectDB = require("./db");
-const authRoutes = require("./routes/authRoutes");
-const productsRoutes = require("./routes/productsRoutes");
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import path from "path";
+import fs from "fs";
+import connectDB from "./db.js";
+import authRoutes from "./routes/authRoutes.js";
+import productsRoutes from "./routes/productsRoutes.js";
+import designRoutes from "./routes/designRoutes.js";
+import authMiddleware from "./middleware/authMiddleware.js";
+import connectCloudinary from "./config/cloudinary.js";
 
-dotenv.config(); // Load environment variables
 
-// Check and create 'uploads' directory if not exists
-const uploadDir = path.join(__dirname, "uploads");
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
 
+dotenv.config();
+connectCloudinary();
 // Connect to MongoDB with proper error handling
 connectDB()
   .then(() => console.log("Connected to MongoDB"))
@@ -26,15 +25,14 @@ connectDB()
 const app = express();
 
 // Middleware
-const authMiddleware = require("./middleware/authMiddleware");
-
 app.use(cors());
-app.use(express.json());
-app.use(express.static(path.join(__dirname, '../uploads')));
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 
 // Routes
 app.use("/auth", authRoutes);
-app.use("/products", authMiddleware, productsRoutes); 
+app.use("/products", authMiddleware, productsRoutes);
+app.use("/case", authMiddleware, designRoutes);
 
 // Set the port from environment variables or default to 5001
 const port = process.env.PORT || 5001;

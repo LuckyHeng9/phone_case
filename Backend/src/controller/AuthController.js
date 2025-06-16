@@ -1,41 +1,42 @@
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const User = require("../models/User");
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import User from "../models/User.js";
 
 const authController = {
   register: async (req, res) => {
     const { username, email, password, address, profile_picture_path } = req.body;
-  
+
     if (!username || !email || !password) {
       return res.status(400).json({ error: "All fields are required" });
     }
-  
+
     try {
       // Check if the email already exists in the database
       const existingUser = await User.findOne({ email });
       if (existingUser) {
         return res.status(400).json({ error: "Email is already taken" });
       }
-  
+
       // Hash password
       const salt = await bcrypt.genSalt(10);
       const hashPassword = await bcrypt.hash(password, salt);
-  
+
       // Create a new user
       const newUser = new User({
         username,
         email,
+        role: "user",
         password: hashPassword,
         address,
         profile_picture_path,
       });
-  
+
       // Save the user to the database
       await newUser.save();
-  
+
       // Generate a token for the new user
       const token = getToken(newUser);
-  
+
       // Respond with the token and user data
       return res.status(201).json({
         message: "User registered successfully",
@@ -44,6 +45,7 @@ const authController = {
           id: newUser._id,
           username: newUser.username,
           email: newUser.email,
+          role: newUser.role,
           address: newUser.address,
           profile_picture_path: newUser.profile_picture_path,
         },
@@ -56,7 +58,6 @@ const authController = {
       return res.status(500).json({ error: "Server error" });
     }
   },
-  
 
   login: async (req, res) => {
     const { email, password } = req.body;
@@ -84,6 +85,7 @@ const authController = {
         user: {
           id: user._id,
           username: user.username,
+          role: user.role,
           email: user.email,
           address: user.address,
           profile_picture_path: user.profile_picture_path,
@@ -96,6 +98,11 @@ const authController = {
     }
   },
 
+
+  logOut: async (req, res) => {
+    res.status(200).json({ message: "Logout successful" });
+  },
+
   checkAuth: async (req, res) => {
     try {
       const id = req.user.id;
@@ -106,8 +113,6 @@ const authController = {
     }
   },
 };
-
-module.exports = authController;
 
 // Helper function to generate JWT token
 function getToken(user) {
@@ -127,3 +132,5 @@ function getToken(user) {
     throw new Error("Failed to generate token");
   }
 }
+
+export default authController;

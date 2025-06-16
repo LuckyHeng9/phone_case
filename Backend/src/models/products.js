@@ -1,11 +1,32 @@
-const mongoose = require("mongoose");
+// models/Product.js
+import mongoose from "mongoose";
 
-const ProductSchema = new mongoose.Schema({
-  title: { type: String, required: true },
-  price: { type: String, required: true },
-  inStock: { type: Boolean, required: true },
-  requiresDelivery: { type: Boolean, required: true },
-  img: { type: String, required: true },
-});
+const ProductSchema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      required: true,
+    },
+    price: {
+      type: String,
+      required: true,
+    },
+    inStock: {
+      type: Boolean,
+      required: true,
+    },
+    requiresDelivery: {
+      type: Boolean,
+      required: true,
+    },
+    image_path: {
+      type: String,
+      required: true,
+    },
+  },
+  { timestamps: true } // Automatically adds createdAt and updatedAt fields
+);
 
-module.exports = mongoose.model("Product", ProductSchema);
+const Product= mongoose.model("Product", ProductSchema); // Export the model
+
+export default Product;
