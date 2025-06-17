@@ -4,63 +4,87 @@ import { getCart, getTotalPrice } from "../redux/slice/cartSlice";
 import img0 from "../assets/img0.jpeg";
 import SuccesPage from "./SuccesPage";
 import { Navigate } from "react-router-dom";
+import { loadStripe } from "@stripe/stripe-js";
+import axios from "axios";
+import { base_url } from "../base_url";
+
+const stripePromise = loadStripe(
+  "pk_test_51RarniQcrHes9YPOQsI0mGzKgxh0vV4rWnNwTofhMzHY5H5VyqXl4WxWpwcN0dEq4v8Kgw4md3OHqnvSPXtwnv1o003emjrmA0"
+);
 
 const CheckoutPage = () => {
   const [showPayment, setShowPayment] = useState(false);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
   const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const cartItems = useSelector(getCart);
   const totalPrice = useSelector(getTotalPrice);
   const { user, loading } = useSelector((state) => state.auth);
 
-  if (!user && !loading) {
-    return <Navigate to="/login" replace />;
-  }
+  const handlePayment = async () => {
+    if (!cartItems.length) {
+      setErrorMessage("Your cart is empty.");
+      return;
+    }
+    try {
+      const stripe = await stripePromise;
+      const token = localStorage.getItem("token");
 
-  const handleContinueToPayment = () => {
-    setShowPayment(true);
-  };
+      // Prepare products payload exactly as backend expects
+      const productsPayload = cartItems.map((item) => ({
+        id: item._id || item.id,
+        name: item.name || item.title,
+        price: Number(item.price),
+        quantity: Number(item.quantity),
+        image: item.image || "",
+      }));
 
-  const handlePaymentMethodChange = (e) => {
-    setSelectedPaymentMethod(e.target.value);
-  };
+      const response = await axios.post(
+        `${base_url}/payment/create-checkout-session`,
+        { products: productsPayload },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-  const getPaymentButtonLabel = () => {
-    switch (selectedPaymentMethod) {
-      case "Credit Card":
-        return "Pay with Credit Card";
-      case "PayPal":
-        return "Pay with PayPal";
-      case "ABA":
-        return "Pay with ABA";
-      default:
-        return "Pay Now";
+      const { sessionId } = response.data;
+      const result = await stripe.redirectToCheckout({ sessionId });
+
+      if (result.error) {
+        setErrorMessage(result.error.message);
+      }
+    } catch (error) {
+      console.error("Stripe payment error:", error);
+      setErrorMessage(error.response?.data?.message || "Payment failed.");
     }
   };
 
-  const handlePaymentSuccess = () => {
-    setPaymentSuccess(true);
-  };
+  if (!user && !loading) {
+    return <Navigate to="/login" replace />;
+  }
 
   return (
     <div className="w-full h-[100vh] p-6 flex flex-col items-center bg-white">
       <div className="flex flex-col lg:flex-row gap-8 w-full max-w-5xl">
         {/* Contact Info Form */}
-        {!showPayment && (
+        {!showPayment && !paymentSuccess && (
           <div className="w-full lg:w-2/3 p-6 bg-white shadow-md rounded-lg">
             <h1 className="text-xl font-bold mb-4 text-[#272B3B]">
               Contact Information
             </h1>
             <form className="flex flex-col gap-4">
               <input
-                type="text"
+                type="email"
                 placeholder="Your email"
+                defaultValue={user?.email}
+                readOnly
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               <input
-                type="number"
-                placeholder="Your number"
+                type="tel"
+                placeholder="Your phone number"
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none"
               />
               <div className="flex flex-col gap-4">
@@ -87,106 +111,37 @@ const CheckoutPage = () => {
           </div>
         )}
 
-        {/* Payment Section */}
-        {showPayment && !paymentSuccess && (
-          <div className="w-[65%] max-w-5xl p-6 bg-white shadow-md rounded-lg mt-8">
-            <h1 className="text-xl font-bold mb-4 text-[#272B3B]">Payment Info</h1>
-            <form className="flex flex-col gap-4">
-              <div className="flex flex-col gap-4">
-                <label className="flex items-center gap-2">
-                  <input
-                    type="radio"
-                    name="payment"
-                    value="Credit Card"
-                    onChange={handlePaymentMethodChange}
-                  />
-                  Credit card
-                </label>
-                {selectedPaymentMethod === "Credit Card" && (
-                  <>
-                    <input
-                      type="text"
-                      placeholder="Card number"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Security code"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Expiry Date (MM/YYYY)"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-                    />
-                  </>
-                )}
-
-                <label className="flex items-center gap-2">
-                  <input
-                    type="radio"
-                    name="payment"
-                    value="PayPal"
-                    onChange={handlePaymentMethodChange}
-                  />
-                  PayPal
-                </label>
-                {selectedPaymentMethod === "PayPal" && (
-                  <input
-                    type="text"
-                    placeholder="PayPal Email"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-                  />
-                )}
-
-                <label className="flex items-center gap-2">
-                  <input
-                    type="radio"
-                    name="payment"
-                    value="ABA"
-                    onChange={handlePaymentMethodChange}
-                  />
-                  ABA
-                </label>
-                {selectedPaymentMethod === "ABA" && (
-                  <input
-                    type="text"
-                    placeholder="ABA Number"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-                  />
-                )}
-              </div>
-            </form>
-          </div>
-        )}
-
         {/* Payment Success Page */}
         {paymentSuccess && <SuccesPage />}
 
         {/* Order Summary */}
         {!paymentSuccess && (
           <div className="w-full lg:w-1/3 p-6 bg-white shadow-md rounded-lg">
-            <h1 className="text-xl font-bold mb-4 text-[#272B3B]">Order Summary</h1>
+            <h1 className="text-xl font-bold mb-4 text-[#272B3B]">
+              Order Summary
+            </h1>
             {cartItems.length > 0 ? (
               <>
                 {cartItems.map((item) => (
                   <div
-                    key={item.id}
+                    key={item.id || item._id}
                     className="flex items-center justify-between gap-4 border-b pb-4 mb-4"
                   >
                     <img
                       src={item.image_path || img0}
-                      alt={item.name}
+                      alt={item.name || item.title}
                       className="h-20 object-cover rounded-lg"
                     />
                     <div className="flex flex-col gap-1 flex-1">
-                      <p className="text-[1rem] font-semibold">{item.title}</p>
-                      <p className="text-sm text-gray-500">{item.model}</p>
-                      <p className="text-sm text-gray-500">Color: {item.color}</p>
-                      <p className="text-sm text-gray-500">x{item.quantity}</p>
+                      <p className="text-[1rem] font-semibold">
+                        {item.name || item.title}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        Quantity: {item.quantity}
+                      </p>
                     </div>
                     <div className="text-sm font-semibold flex-shrink-0">
-                      ${item.price * item.quantity}
+                      ${Number(item.price) * Number(item.quantity)}
                     </div>
                   </div>
                 ))}
@@ -201,20 +156,24 @@ const CheckoutPage = () => {
               </div>
             )}
 
+            {errorMessage && (
+              <p className="text-red-500 text-center mt-2">{errorMessage}</p>
+            )}
+
             {!showPayment ? (
-              <div
-                className="flex items-center justify-center w-full mt-8 bg-[#272B3B] text-white py-2 rounded-lg hover:bg-[#3e445e] cursor-pointer"
-                onClick={handleContinueToPayment}
+              <button
+                className="w-full mt-8 bg-[#272B3B] text-white py-2 rounded-lg hover:bg-[#3e445e]"
+                onClick={() => setShowPayment(true)}
               >
                 Continue to Payment
-              </div>
+              </button>
             ) : (
-              <div
-                className="flex items-center justify-center w-full mt-8 bg-[#272B3B] text-white py-2 rounded-lg hover:bg-[#3e445e] cursor-pointer"
-                onClick={handlePaymentSuccess}
+              <button
+                className="w-full mt-8 bg-[#272B3B] text-white py-2 rounded-lg hover:bg-[#3e445e]"
+                onClick={handlePayment}
               >
-                {getPaymentButtonLabel()}
-              </div>
+                Pay Now
+              </button>
             )}
           </div>
         )}
