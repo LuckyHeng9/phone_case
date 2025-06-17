@@ -1,55 +1,75 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import img0 from "../assets/img0.jpeg"; // Import the image if it's in src/assets
-import { useDispatch } from "react-redux";
-import { addCartItem } from "../redux/slice/cartSlice"; // Import the action to add to cart
+import { useDispatch, useSelector } from "react-redux";
+import { addCartItem } from "../redux/slice/cartSlice";
+import {
+  fetchProducts,
+  getProducts,
+  getProductLoading,
+} from "../redux/slice/productSlice";
 
 const ProductDetail = () => {
-  const { id } = useParams();
+  const { _id } = useParams();
   const dispatch = useDispatch();
+  const products = useSelector(getProducts);
+  const loading = useSelector(getProductLoading);
 
-  const product = {
-    id,
-    title: "Red Flame Case",
-    model: "iPhone 16 Pro",
-    price: 10,
-    img: img0, // Use the imported image
-  };
+  useEffect(() => {
+    if (products.length === 0) {
+      dispatch(fetchProducts());
+    }
+  }, [dispatch, products.length]);
 
-  // Function to handle adding product to the cart
+  const product = products.find((item) => item._id === _id);
+
   const handleAddToCart = () => {
-    dispatch(addCartItem(product)); // Dispatch action to add item to cart
+    dispatch(addCartItem(product));
   };
 
   return (
-    <div className="flex items-center justify-center h-screen px-4">
-      <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-md">
-        {/* Product Image */}
-        <div className="flex items-center justify-center mb-6">
-          <img
-            src={product.img}
-            onError={(e) => (e.target.src = "https://via.placeholder.com/300")}
-            alt={product.title}
-            className="rounded-lg object-cover w-full"
-          />
-        </div>
+    <>
+      {loading ? (
+        <p className="text-center text-lg text-gray-600 mt-10">Loading...</p>
+      ) : !product ? (
+        <p className="text-center text-red-500 mt-10">Product not found.</p>
+      ) : (
+        <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4">
+          <div className="bg-white rounded-xl shadow-lg max-w-4xl w-full flex flex-col md:flex-row overflow-hidden">
+            {/* Image Section */}
+            <div className="md:w-1/2 w-full h-[300px] md:h-auto">
+              <img
+                src={product.image_path}
+                onError={(e) =>
+                  (e.target.src = "https://via.placeholder.com/300")
+                }
+                alt={product.title}
+                className="w-full h-full object-cover"
+              />
+            </div>
 
-        {/* Product Details */}
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">{product.title}</h1>
-        <p className="text-gray-500 text-sm mb-4">{product.model}</p>
-        <p className="text-xl font-semibold text-gray-700 mb-6">${product.price}</p>
+            {/* Info Section */}
+            <div className="p-6 md:w-1/2 flex flex-col justify-between">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-800 mb-2">
+                  {product.title}
+                </h2>
+                <p className="text-lg text-green-600 font-semibold mb-4">
+                  ${product.price}
+                </p>
+                <p className="text-gray-600 mb-6">{product.description || 'UnKnown'}</p>
+              </div>
 
-        {/* Actions */}
-        <div className="flex justify-between items-center">
-          <button
-            onClick={handleAddToCart} // Call the function when clicked
-            className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600 focus:outline-none"
-          >
-            Add to Cart
-          </button>
+              <button
+                onClick={handleAddToCart}
+                className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md transition duration-200 w-full"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 

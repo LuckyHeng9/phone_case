@@ -22,45 +22,30 @@ import ReportsPage from "./adimPage/ReportsPage";
 import SettingsPage from "./adimPage/SettingsPage";
 import AddProductPage from "./adimPage/AddProductPage";
 
+import { checkAuth } from "./utils/authUtils";
+import MainRouteHandler from "./routes/MainRouteHandler";
+
 
 const App = () => {
-  const { user, loading } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  const cartItems = useSelector(getCart);
-
-  const checkAuth = async () => {
-    dispatch(setLoading(true));
-
-    const token = localStorage.getItem("token");
-    if (token) {
-      try {
-        const response = await axios.get(`${base_url}/auth/check-auth`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        if (response.status === 200) {
-          dispatch(setUser(response.data));
-        } else {
-          localStorage.removeItem("token");
-        }
-      } catch (error) {
-        console.error("Error during authentication:", error);
-        localStorage.removeItem("token");
-      }
-    }
-
-    dispatch(setLoading(false));
-  };
+  const { loading } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    checkAuth();
-  }, []);
+    checkAuth(dispatch);
+  }, [dispatch]);
 
-  const handleRemoveCart = (id) => {
-    dispatch(removeCartItem(id));
-  };
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen text-white text-xl">
+        <div className="spinner" />
+        <p className="ml-4">Loading...</p>
+      </div>
+    );
+  }
 
   return (
     <Router>
+
       {loading ? (
         <div className="flex items-center justify-center h-screen">
           <div className="spinner" />
@@ -132,6 +117,11 @@ const App = () => {
           </Routes>
         </div>
       )}
+
+      <Routes>
+        <Route path="*" element={<MainRouteHandler />} />
+      </Routes>
+
     </Router>
   );
 };

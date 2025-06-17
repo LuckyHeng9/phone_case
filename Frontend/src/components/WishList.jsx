@@ -2,7 +2,7 @@ import { MdOutlineDeleteOutline, MdOutlineCancel } from "react-icons/md"; // Upd
 
 const WishList = ({ wishListItems, handleRemoveWishList, closeWishList }) => {
   return (
-    <div className="absolute -top-5 -right-[8rem] w-[30rem] h-screen overflow-scroll bg-white shadow-lg rounded-md p-4">
+    <div className="absolute -top-5 -right-4 w-[30rem] h-screen  overflow-scroll bg-white shadow-lg rounded-md p-4">
       <div className="flex items-center justify-between">
         <h3 className="text-xl font-bold mb-3 text-gray-800">Wish List</h3> {/* Updated title */}
         <button 
@@ -16,9 +16,9 @@ const WishList = ({ wishListItems, handleRemoveWishList, closeWishList }) => {
       {wishListItems.length > 0 ? (
         <ul className="space-y-3">
           {wishListItems.map((product) => (
-            <li key={product.id} className="flex items-center gap-3">
+            <li key={product._id} className="flex items-center gap-3">
               <img
-                src={product.img }
+                src={product.image_path }
                 className="w-[5rem] object-cover rounded"
               />
               <div className="flex flex-col gap-1">
@@ -27,7 +27,7 @@ const WishList = ({ wishListItems, handleRemoveWishList, closeWishList }) => {
               </div>
               <div className="ml-auto">
                 <button
-                  onClick={() => handleRemoveWishList(product.id)} // Corrected here
+                  onClick={() => handleRemoveWishList(product._id)} // Corrected here
                   className="text-2xl text-red-600 hover:text-red-800"
                 >
                   <MdOutlineDeleteOutline />

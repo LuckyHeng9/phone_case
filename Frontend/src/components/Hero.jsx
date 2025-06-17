@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { reviews } from "../constance";
 import Footer from "./Footer";
 import { MdOutlineVerified } from "react-icons/md";
-import Design from "./Design";
+
 
 const Hero = () => {
   return (

@@ -1,46 +1,56 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { MdFacebook } from "react-icons/md";
 import { FaGoogle } from "react-icons/fa6";
-import axios from 'axios';
-import { base_url } from '../base_url';
-import { useDispatch } from 'react-redux';
-import { setUser } from '../redux/slice/authSlice';
-import Signup from './Signup';
+import axios from "axios";
+import { base_url } from "../base_url";
+import { useDispatch } from "react-redux";
+import { setUser } from "../redux/slice/authSlice";
+import Signup from "./Signup";
+import { useNavigate } from 'react-router-dom'; 
 
 const Login = () => {
   const [isLoginForm, setIsLoginForm] = useState(true);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     const data = { email, password };
 
     try {
-      const response = await axios.post(base_url + '/auth/login', data);
+      const response = await axios.post(base_url + "/auth/login", data);
 
       if (response.status === 200 && response.data.token) {
         dispatch(setUser(response.data.user));
-        localStorage.setItem('token', response.data.token);
-        console.log('Token stored:', localStorage.getItem('token'));
+        localStorage.setItem("token", response.data.token);
+
+        // 🔥 Redirect based on role
+        const role = response.data.user.role;
+        if (role === "admin") {
+          navigate("/admin");
+        } else {
+          navigate("/store"); // or wherever your normal user should go
+        }
       } else {
-        console.log('Unexpected response:', response);
+        console.log("Unexpected response:", response);
       }
     } catch (error) {
-      console.error('Login error:', error.response?.data || error.message);
-      alert('Login failed: ' + (error.response?.data?.message || error.message));
+      console.error("Login error:", error.response?.data || error.message);
+      alert(
+        "Login failed: " + (error.response?.data?.message || error.message)
+      );
     }
   };
-
 
   const toggleForm = () => {
     setIsLoginForm(!isLoginForm);
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-[#1a1a2e] text-white">
-      <div className="bg-[#4C5566] rounded-lg p-8 w-full max-w-md text-center shadow-lg">
+    <div className="flex justify-center items-center min-h-screen  text-white">
+      <div className="bg-[#303848] rounded-lg p-8 w-full max-w-md text-center shadow-lg">
         <h1 className="text-2xl font-semibold mb-2">
           {isLoginForm
             ? "Log in with your Case Account"
@@ -83,7 +93,7 @@ const Login = () => {
             </button>
           </form>
         ) : (
-          <Signup/>
+          <Signup />
         )}
 
         <div className="flex flex-col items-center space-y-2 my-4">
