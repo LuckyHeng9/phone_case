@@ -79,17 +79,17 @@ const Chart = () => {
   const [activeFilter, setActiveFilter] = useState("MONTHLY");
 
   return (
-    <div className="p-2 grid gap-4 grid-cols-1 lg:grid-cols-[2fr_1fr]">
+    <div className="p-2 grid gap-4 grid-cols-1 lg:grid-cols-[2fr_1fr] z-0">
       {/* Sales Graph Section */}
       <div className="bg-white px-5 rounded-lg shadow-md">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold">Sales Graph</h2>
-          <div className="flex gap-2 my-4">
+          <div className="flex gap-2 my-4 ">
             {["WEEKLY", "MONTHLY", "YEARLY"].map((filter) => (
               <button
                 key={filter}
                 onClick={() => setActiveFilter(filter)}
-                className={`border px-4 py-2 rounded ${
+                className={`border px-4 py-2 rounded  ${
                   activeFilter === filter ? "bg-[#003F62] text-white" : ""
                 }`}
               >
@@ -99,16 +99,17 @@ const Chart = () => {
           </div>
         </div>
         <hr className="border-1 border-black" />
-        <div className="w-full h-72 py-6">
-          <ResponsiveContainer width="100%" height="100%">
+        <div className="w-full h-72 py-6 ">
+          <ResponsiveContainer width="100%" height="100%" >
             <LineChart data={salesData}>
               <XAxis dataKey="month" />
               <YAxis domain={[0, "dataMax + 100"]} />
               <Tooltip />
-              <Line
+              <Line className="-z-50"
                 type="monotone"
                 dataKey="sales"
                 stroke="#2563eb"
+                
                 strokeWidth={2}
                 strokeLinecap="round"
               />

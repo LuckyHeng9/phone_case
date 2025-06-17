@@ -6,6 +6,7 @@ import {
   updateCartItemQuantity,
   calculateTotalPrice,
   getTotalPrice,
+  removeCartItem,
 } from "../redux/slice/cartSlice";
 import { Link } from "react-router-dom";
 
@@ -14,17 +15,22 @@ const CartPage = ({ addCartItem, handleRomoveCart }) => {
   const totalPrice = useSelector(getTotalPrice);
 
   // Function to increase the quantity
-  const increaseQuantity = (id) => {
-    dispatch(updateCartItemQuantity({ id, quantity: 1 }));
+  const increaseQuantity = (_id) => {
+    dispatch(updateCartItemQuantity({ _id, quantity: 1 }));
     dispatch(calculateTotalPrice()); // Recalculate total price
   };
 
   // Function to decrease the quantity
-  const decreaseQuantity = (id) => {
-    dispatch(updateCartItemQuantity({ id, quantity: -1 }));
+  const decreaseQuantity = (_id) => {
+    dispatch(updateCartItemQuantity({ _id, quantity: -1 }));
     dispatch(calculateTotalPrice()); // Recalculate total price
   };
 
+    // Function to remove item from cart
+  const handleRemoveCart = (_id) => {
+    dispatch(removeCartItem(_id));
+    dispatch(calculateTotalPrice());
+  };
   // Recalculate total price when the cart changes
   useEffect(() => {
     dispatch(calculateTotalPrice());
@@ -48,13 +54,13 @@ const CartPage = ({ addCartItem, handleRomoveCart }) => {
           {/* Map through cart items */}
           {addCartItem.map((item) => (
             <div
-              key={item.id}
+              key={item._id}
               className="w-[55%] flex items-center justify-between bg-white p-5 shadow-lg rounded-lg"
             >
               {/* Product List */}
               <div className="flex space-x-4 border-b pb-4">
                 <img
-                  src={item.image || img0} // Use item.image or a default image
+                  src={item.image_path || img0} // Use item.image or a default image
                   alt={item.name}
                   className="h-56 object-cover rounded-lg"
                 />
@@ -67,7 +73,7 @@ const CartPage = ({ addCartItem, handleRomoveCart }) => {
                   <div className="flex items-center justify-center gap-x-2 border-2 border-gray-400 rounded-lg">
                     <button
                       className="px-4 py-2 rounded-lg hover:bg-gray-300"
-                      onClick={() => decreaseQuantity(item.id)}
+                      onClick={() => decreaseQuantity(item._id)}
                     >
                       -
                     </button>
@@ -76,7 +82,7 @@ const CartPage = ({ addCartItem, handleRomoveCart }) => {
                     </span>
                     <button
                       className="px-4 py-2 rounded-lg hover:bg-gray-300"
-                      onClick={() => increaseQuantity(item.id)}
+                      onClick={() => increaseQuantity(item._id)}
                     >
                       +
                     </button>
@@ -86,9 +92,9 @@ const CartPage = ({ addCartItem, handleRomoveCart }) => {
               {/* Container for Delete Icon and Price */}
               <div className="flex flex-col items-end justify-between gap-y-36 flex-grow">
                 {/* Delete Icon */}
-                <button onClick={() => handleRomoveCart(item.id)}>
-                  <MdOutlineDeleteOutline className="text-2xl hover:text-red-800" />
-                </button>
+                <button onClick={() => handleRemoveCart(item._id)}>
+                    <MdOutlineDeleteOutline className="text-2xl hover:text-red-800" />
+                  </button>
                 {/* Price */}
                 <p className="text-sm text-gray-500 font-semibold">
                   ${item.price}
@@ -110,7 +116,7 @@ const CartPage = ({ addCartItem, handleRomoveCart }) => {
           <ul>
             {addCartItem.map((item) => (
               <li
-                key={item.id}
+                key={item._id}
                 className="flex justify-between items-center text-sm py-2"
               >
                 <span>{item.title}</span>

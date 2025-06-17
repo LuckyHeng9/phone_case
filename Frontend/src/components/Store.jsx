@@ -1,7 +1,7 @@
 import React from "react";
 import { products } from "../constance/index.js";
-import Card from "./Card.jsx";
 import img8 from "../assets/img8.png"; // Adjust path as needed
+import ProductList from "./ProductList.jsx";
 
 const Store = () => {
   return (
@@ -22,7 +22,7 @@ const Store = () => {
         </div>
       </div>
       <div className="mx-auto mt-28">
-        <Card products={products} />
+        <ProductList products={products} />
       </div>
     </div>
   );
