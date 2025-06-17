@@ -15,6 +15,13 @@ import ProductDetail from "./components/ProductDetail";
 import { getCart, removeCartItem } from "./redux/slice/cartSlice";
 import CheckoutPage from "./components/CheckoutPage";
 import AdminPage  from "./adimPage/AdminPage";
+import ProductPage from "./adimPage/Product"; // adjust if needed
+import OrderList from "./adimPage/OrderList";
+import CustomersPage from "./adimPage/CustomersPage";
+import ReportsPage from "./adimPage/ReportsPage";
+import SettingsPage from "./adimPage/SettingsPage";
+import AddProductPage from "./adimPage/AddProductPage";
+
 
 const App = () => {
   const { user, loading } = useSelector((state) => state.auth);
@@ -89,6 +96,13 @@ const App = () => {
                     <Routes>
                       <Route path="/" element={<Hero />} />
                       <Route path="/store" element={<Store />} />
+                      <Route path="/admin/product" element={<ProductPage />} />
+                      <Route path="/admin/dashboard" element={<AdminPage />} />
+                      <Route path="/admin/orders" element={<OrderList />} />
+                      <Route path="/admin/customers" element={<CustomersPage />} />
+                      <Route path="/admin/reports" element={<ReportsPage />} />
+                      <Route path="/admin/settings" element={<SettingsPage />} />
+                      <Route path="/admin/product/add" element={<AddProductPage />} />
                       <Route path="/design" element={<DesignPage />} />
                       <Route path="/product/:id" element={<ProductDetail />} />
                       <Route

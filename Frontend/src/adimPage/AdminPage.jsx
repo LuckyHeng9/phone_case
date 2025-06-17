@@ -14,7 +14,6 @@ const AdminPage = () => {
       <Sidebar />
       {/* Main content section with margin-left to prevent overlap */}
       <div className="flex-1 ml-64 min-h-screen bg-[#E7E7E3]">
-        <Header />
         <main className="p-4">
           <h1 className="text-2xl font-bold">Dashboard</h1>
           <div className="cursor-pointer">
