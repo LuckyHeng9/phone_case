@@ -3,12 +3,14 @@ import { PiUploadSimple } from "react-icons/pi";
 import { base_url } from "../../../base_url";
 import axios from "axios";
 
+
 const AddProduct = () => {
   const fileInputRef = useRef(null);
   const [image, setImage] = useState(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
+  const [model, setModel] = useState("");
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
 
@@ -38,10 +40,11 @@ const AddProduct = () => {
     const formData = new FormData();
     formData.append("image", image);
     formData.append("title", title);
-    formData.append("description", description);
     formData.append("price", price);
     formData.append("inStock", true);
     formData.append("requiresDelivery", true);
+    formData.append("description", description);
+    formData.append("model", model);
 
     try {
       const token = localStorage.getItem("token");
@@ -63,6 +66,7 @@ const AddProduct = () => {
         setDescription("");
         setPrice("");
         setImage(null);
+        setModel("");
       }
     } catch (error) {
       console.error("❌ Failed to add product:", error);
@@ -122,6 +126,19 @@ const AddProduct = () => {
               onChange={(e) => setPrice(e.target.value)}
               placeholder="Enter price"
               className="w-full px-4 py-2 bg-slate-800 text-white border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-white mb-1">
+              Model Name
+            </label>
+            <textarea
+              rows="4"
+              value={model}
+              onChange={(e) => setModel(e.target.value)}
+              placeholder="Enter Model Name"
+            className="w-full px-4 py-2 bg-slate-800 text-white border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 

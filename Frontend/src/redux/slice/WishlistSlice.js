@@ -25,10 +25,14 @@ const WishListSlice = createSlice({
       // Save updated list back to localStorage
       localStorage.setItem("wishlist", JSON.stringify(state.items));
     },
+    clearWishList: (state) => {
+      state.items = []; // 🧹 Clear Redux wish list state
+      localStorage.removeItem("wishlist"); // 🧹 Clear localStorage
+    },
   },
 });
 
-export const { addWishList, removeWishList } = WishListSlice.actions;
+export const { addWishList, removeWishList , clearWishList } = WishListSlice.actions;
 export const getWishList = (state) => state.wishlist.items;
 
 export default WishListSlice.reducer;

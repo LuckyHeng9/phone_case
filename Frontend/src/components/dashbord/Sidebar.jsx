@@ -50,6 +50,7 @@ const Sidebar = () => {
     { icon: <MdOutlineDashboard className="text-2xl" />, label: "Dashboard", redirectTo: "/" },
     { icon: <IoAlbumsOutline className="text-2xl" />, label: "All Products", redirectTo: "/all-products" },
     { icon: <IoDocumentTextSharp className="text-2xl" />, label: "Order List", redirectTo: "/order-list" },
+    
   ];
 
   return (

@@ -4,6 +4,8 @@ import AdminPage from "../adimPage/AdminPage";
 import AllProducts from "../components/dashbord/components/AllProducts";
 import AddProduct from "../components/dashbord/components/AddProduct";
 import OrderList from "../components/dashbord/components/OrderList";
+// import OrderList from "../components/dashbord/components/OrderList";
+
 
 const AdminRoutes = () => (
   <Routes>

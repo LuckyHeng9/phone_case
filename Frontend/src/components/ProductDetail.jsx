@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addCartItem } from "../redux/slice/cartSlice";
+import { clearWishList } from "../redux/slice/WishlistSlice";
 import {
   fetchProducts,
   getProducts,
@@ -15,6 +16,7 @@ const ProductDetail = () => {
   const loading = useSelector(getProductLoading);
 
   useEffect(() => {
+    dispatch(clearWishList());
     if (products.length === 0) {
       dispatch(fetchProducts());
     }

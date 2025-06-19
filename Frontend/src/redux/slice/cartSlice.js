@@ -1,5 +1,3 @@
-// redux/slice/cartSlice.js
-
 import { createSlice } from "@reduxjs/toolkit";
 
 // Load cart from localStorage
@@ -24,7 +22,6 @@ const cartSlice = createSlice({
         state.cart.push({ ...newItem, quantity: 1 });
       }
 
-      // Save to localStorage
       localStorage.setItem("cart", JSON.stringify(state.cart));
     },
 
@@ -49,6 +46,11 @@ const cartSlice = createSlice({
       localStorage.setItem("cart", JSON.stringify(state.cart));
     },
 
+    clearCart: (state) => {
+      state.cart = []; // 🧹 Clear Redux cart state
+      localStorage.removeItem("cart"); // 🧹 Clear localStorage
+    },
+
     calculateTotalPrice: (state) => {
       state.totalPrice = state.cart.reduce(
         (total, item) => total + item.price * item.quantity,
@@ -63,6 +65,7 @@ export const {
   addCartItem,
   updateCartItemQuantity,
   removeCartItem,
+  clearCart,
   calculateTotalPrice,
 } = cartSlice.actions;
 

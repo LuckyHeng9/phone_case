@@ -4,6 +4,7 @@ import WishlistSliceReducer from "./slice/WishlistSlice";
 import cartSliceReducer from "./slice/cartSlice";
 import  casePhoneReducer  from "./slice/casePhoneSlice";
 import productReducer from "./slice/productSlice";
+import dashboardReducer from "./slice/dashboardSlice";
 
 export default combineReducers({
   auth: authReducer,
@@ -11,5 +12,6 @@ export default combineReducers({
   cart: cartSliceReducer,
   casePhone: casePhoneReducer,
   products: productReducer,
+  dashboard: dashboardReducer,
   
 });
