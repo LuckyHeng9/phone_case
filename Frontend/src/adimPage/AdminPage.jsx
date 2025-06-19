@@ -13,10 +13,6 @@ const AdminPage = ({ title = "Dashboard", component = null }) => {
   return (
     <div className="flex ">
       <Sidebar />
-
-      {/* Main content section with margin-left to prevent overlap */}
-      <div className="flex-1 ml-64 min-h-screen bg-[#E7E7E3]">
-
       <div className="flex-1 ml-64 min-h-screen bg-[#E7E7E3] overflow-hidden">
         <Header />
 
