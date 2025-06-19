@@ -5,9 +5,14 @@ import cloudinary from "cloudinary";
 const productsController = {
   addProduct: async (req, res) => {
     try {
-      const { title, price, inStock, requiresDelivery } = req.body;
+      const { title, price, inStock, requiresDelivery,model,description } = req.body;
 
-      if (!title || !price || typeof inStock === "undefined" || typeof requiresDelivery === "undefined") {
+      if (
+        !title ||
+        !price ||
+        typeof inStock === "undefined" ||
+        typeof requiresDelivery === "undefined"
+      ) {
         return res.status(400).json({ message: "Missing required fields" });
       }
 
@@ -41,6 +46,8 @@ const productsController = {
         inStock,
         requiresDelivery,
         image_path: imageUrl,
+        model,
+        description,
       });
 
       await newProduct.save();
@@ -50,10 +57,11 @@ const productsController = {
       });
     } catch (error) {
       console.error("Error adding product:", error);
-      res.status(500).json({ message: "Failed to add product", error: error.message });
+      res
+        .status(500)
+        .json({ message: "Failed to add product", error: error.message });
     }
   },
-
 
   getAllProducts: async (req, res) => {
     try {
@@ -61,38 +69,41 @@ const productsController = {
       res.status(200).json(products);
     } catch (error) {
       console.error("Error retrieving products:", error);
-      res.status(500).json({ message: "Failed to retrieve products", error: error.message });
+      res
+        .status(500)
+        .json({ message: "Failed to retrieve products", error: error.message });
     }
   },
 
-
-  getProductById: async (req, res) =>{
+  getProductById: async (req, res) => {
     try {
-     
       const productId = req.params.id;
       const product = await Product.findById(productId);
-      if(!product){
-        return res.status(404).json({message:"Product not found"});
-      }else{
-       return res.status(200).json(product);
+      if (!product) {
+        return res.status(404).json({ message: "Product not found" });
+      } else {
+        return res.status(200).json(product);
       }
-      
     } catch (error) {
       console.error("Error retrieving product:", error);
-      res.status(500).json({ message: "Failed to retrieve product", error: error.message });
+      res
+        .status(500)
+        .json({ message: "Failed to retrieve product", error: error.message });
     }
   },
-  
-  deleteProduct: async (req, res) =>{
+
+  deleteProduct: async (req, res) => {
     try {
       const productId = req.params.id;
-    const product = await Product.findByIdAndDelete(productId);
+      const product = await Product.findByIdAndDelete(productId);
 
-    if(!product){
-      return res.statuse(404).json({message:"Product not found"});
-    }else{
-      return res.status(200).json({message:"Product deleted successfully"});
-    }
+      if (!product) {
+        return res.statuse(404).json({ message: "Product not found" });
+      } else {
+        return res
+          .status(200)
+          .json({ message: "Product deleted successfully" });
+      }
     } catch (error) {
       res.status(500).json({ message: "Failed to delete product" });
     }
@@ -101,20 +112,48 @@ const productsController = {
   updateProduct: async (req, res) => {
     try {
       const productId = req.params.id;
-      const {title, price, inStock, requiresDelivery} = req.body;
+      const { title, price, inStock, requiresDelivery } = req.body;
       const product = await Product.findById(productId);
-      const updatedProduct = await Product.findByIdAndUpdate(productId, {title, price, inStock, requiresDelivery}, {new: true});
+      const updatedProduct = await Product.findByIdAndUpdate(
+        productId,
+        { title, price, inStock, requiresDelivery },
+        { new: true }
+      );
 
-      if(!product){
-        return res.status(404).json({message:"Product not found"});
-      }else{
+      if (!product) {
+        return res.status(404).json({ message: "Product not found" });
+      } else {
         return res.status(200).json(updatedProduct);
       }
     } catch (error) {
       res.status(500).json({ message: "Failed to update product" });
     }
+  },
+
+searchProducts: async (req, res) => {
+  try {
+    const { search, modle, minPrice, maxPrice } = req.query;
+    const query = {};
+
+    if (search) {
+      query.title = { $regex: search, $options: "i" }; // Flexible match
+    }
+
+    if (minPrice) query.price = { ...query.price, $gte: Number(minPrice) };
+    if (maxPrice) query.price = { ...query.price, $lte: Number(maxPrice) };
+
+    const phones = await Product.find(query);
+    res.json(phones);
+  } catch (error) {
+    console.error("Error searching products:", error);
+    res.status(500).json({
+      message: "Failed to search products",
+      error: error.message,
+    });
   }
-      
-};  
+},
+
+
+};
 
 export default productsController;

@@ -23,6 +23,13 @@ const ProductSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    model: {
+      type: String,
+      required: true,
+    },
+    description: {
+      type: String,
+    },
   },
   { timestamps: true } // Automatically adds createdAt and updatedAt fields
 );

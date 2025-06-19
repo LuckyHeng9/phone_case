@@ -9,8 +9,8 @@ import productsRoutes from "./routes/productsRoutes.js";
 import designRoutes from "./routes/designRoutes.js";
 import authMiddleware from "./middleware/authMiddleware.js";
 import connectCloudinary from "./config/cloudinary.js";
-
-
+import { stripe } from "./config/stripe.js";
+import paymentRoutes from "./routes/paymentRoutes.js";
 
 dotenv.config();
 connectCloudinary();
@@ -33,7 +33,7 @@ app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 app.use("/auth", authRoutes);
 app.use("/products", authMiddleware, productsRoutes);
 app.use("/case", authMiddleware, designRoutes);
-
+app.use("/payment", paymentRoutes);
 // Set the port from environment variables or default to 5001
 const port = process.env.PORT || 5001;
 app.listen(port, () => {

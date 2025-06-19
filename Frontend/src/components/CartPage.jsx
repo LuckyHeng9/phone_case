@@ -37,7 +37,7 @@ const CartPage = ({ addCartItem, handleRomoveCart }) => {
   }, [addCartItem, dispatch]);
 
   return (
-    <div className="relative w-full h-[100vh] bg-gray-100 pt-10 overflow-auto">
+    <div className="relative w-full h-[100vh] overflow-auto">
       {/* Header Section */}
 
       {/* Product Cart Section */}

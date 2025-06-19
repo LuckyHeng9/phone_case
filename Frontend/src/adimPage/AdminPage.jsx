@@ -3,6 +3,7 @@ import Header from "../components/dashbord/Header";
 import Sidebar from "../components/dashbord/Sidebar";
 import { MdDateRange } from "react-icons/md";
 import Chart from "../components/dashbord/Chart";
+import DashboardCards from "../components/dashbord/DashboardCards";
 
 const AdminPage = ({ title = "Dashboard", component = null }) => {
   useEffect(() => {
@@ -12,10 +13,6 @@ const AdminPage = ({ title = "Dashboard", component = null }) => {
   return (
     <div className="flex ">
       <Sidebar />
-
-      {/* Main content section with margin-left to prevent overlap */}
-      <div className="flex-1 ml-64 min-h-screen bg-[#E7E7E3]">
-
       <div className="flex-1 ml-64 min-h-screen bg-[#E7E7E3] overflow-hidden">
         <Header />
 
@@ -38,6 +35,7 @@ const AdminPage = ({ title = "Dashboard", component = null }) => {
               {/* Default Dashboard content */}
               <section className="p-2 mt-5 flex flex-wrap gap-4">
                 {/* Card content here */}
+                <DashboardCards />
               </section>
               <section className="y-6">
                 <Chart className="-z-50" />

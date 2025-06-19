@@ -13,6 +13,7 @@ import ProtectedRoute from "../components/ProtectedRoute";
 import GuestRoute from "../components/GuestRoute";
 import { useSelector } from "react-redux";
 import { getCart, removeCartItem } from "../redux/slice/cartSlice";
+import SuccesPage from "../components/SuccesPage";
 
 const UserRoutes = () => {
   const cartItems = useSelector(getCart);
@@ -77,6 +78,18 @@ const UserRoutes = () => {
           <ProtectedRoute>
             <Layout>
               <CheckoutPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+
+      <Route
+        path="/purchase-success"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <SuccesPage />
             </Layout>
           </ProtectedRoute>
         }

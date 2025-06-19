@@ -240,7 +240,7 @@ const DesignPage = () => {
             <AspectRatio
               ref={phoneCaseRef}
               ratio={896 / 1831}
-              className="pointer-events-none relative z-50 aspect-[896/1831] w-full"
+              className="pointer-events-none relative z-40 aspect-[896/1831] w-full"
             >
               <div className="relative w-full h-full">
                 <img
