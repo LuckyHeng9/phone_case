@@ -13,8 +13,13 @@ const AdminPage = ({ title = "Dashboard", component = null }) => {
   return (
     <div className="flex ">
       <Sidebar />
+
+      {/* Main content section with margin-left to prevent overlap */}
+      <div className="flex-1 ml-64 min-h-screen bg-[#E7E7E3]">
+
       <div className="flex-1 ml-64 min-h-screen bg-[#E7E7E3] overflow-hidden">
         <Header />
+
         <main className="p-4">
           <h1 className="text-2xl font-bold">{title}</h1>
           <div className="flex items-center justify-between p-2">
