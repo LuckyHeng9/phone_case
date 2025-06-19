@@ -12,8 +12,6 @@ import connectCloudinary from "./config/cloudinary.js";
 import { stripe } from "./config/stripe.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
 
-
-
 dotenv.config();
 connectCloudinary();
 // Connect to MongoDB with proper error handling

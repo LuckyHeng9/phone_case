@@ -1,11 +1,11 @@
-import Case from "../models/Case.js";
+import CustomCase from "../models/Case.js";
 import cloudinary from "cloudinary";
 import connectCloudinary from "../config/cloudinary.js";
 
 const designController = {
   design: async (req, res) => {
     try {
-      const { selectedTemplate, imageDimensions, backgroundColor } = req.body;
+      const { selectedTemplate, imageDimensions, backgroundColor ,price} = req.body;
 
       if (!selectedTemplate || !imageDimensions) {
         return res.status(400).json({ message: "Missing required fields" });
@@ -33,11 +33,12 @@ const designController = {
       const imageUrl = result.secure_url;
 
       // Create a new Case document
-      const newCase = new Case({
+      const newCase = new CustomCase({
         selectedTemplate,
         imageUrl,
         imageDimensions,
        backgroundColor,
+       price,
       });
 
       // Save to MongoDB
@@ -54,7 +55,7 @@ const designController = {
   get_design: async (req, res) => {
     try {
       const { _id } = req.params;  // Get the ID from the URL params
-      const design = await Case.findById(_id);  // Find the design by ID in the database
+      const design = await CustomCase.findById(_id);  // Find the design by ID in the database
 
       if (!design) {
         return res.status(404).json({ message: "Design not found" });

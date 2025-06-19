@@ -7,5 +7,7 @@ const router = express.Router();
 
 router.post("/create-checkout-session", authMiddleware, paymentController.createCheckoutSession);
 router.post("/checkout-success", paymentController.checkoutSuccess);
+router.get("/get-all-orders", authMiddleware, paymentController.getAllOrders);
+router.put("/update-order-status/:orderId", authMiddleware, paymentController.updateOrderStatuse);
 
 export default router;

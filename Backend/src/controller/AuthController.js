@@ -121,6 +121,7 @@ function getToken(user) {
       {
         id: user._id,
         username: user.username,
+        role: user.role,
         email: user.email,
       },
       process.env.JWT_KEY, // Ensure JWT_KEY is set in your environment variables
